@@ -46,6 +46,9 @@ public class MissleController : MonoBehaviour {
             {
                 MonsterController mc = monsters[i].GetComponent<MonsterController>();
                 mc.GetDamage(damage);
+
+                GameObject ptl = Instantiate(particles, transform.position, transform.rotation);
+                Destroy(ptl, 2f);
             }
         }
 

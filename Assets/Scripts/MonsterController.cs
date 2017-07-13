@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonsterController : MonoBehaviour {
 
@@ -10,6 +11,8 @@ public class MonsterController : MonoBehaviour {
     public int startHP = 100;
     public Color damagedColor;
     public float changindColorSpeed;
+    public Image heathBar;
+    
 
     private int HP;
     private Transform target;
@@ -84,6 +87,7 @@ public class MonsterController : MonoBehaviour {
         {
             changingColor = true;
             HP -= inpDamage;
+            heathBar.fillAmount = (float)HP / (float)startHP;
             if (HP <= 0)
             {
                 Die();

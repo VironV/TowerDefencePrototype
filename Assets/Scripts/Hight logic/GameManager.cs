@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public float checksInSec = 2;
     public GameObject castle;
     public GameObject gameoverUI;
+    public GameObject winScreen;
 
     public static bool gameEnded;
 
@@ -48,7 +49,7 @@ public class GameManager : MonoBehaviour {
     {
         if (!printed)
         {
-            Debug.Log("GAME OVER");
+            //Debug.Log("GAME OVER");
             printed = true;
 
             castle.GetComponent<CastleController>().Explode();
@@ -66,8 +67,12 @@ public class GameManager : MonoBehaviour {
     {
         if (!printed)
         {
-            Debug.Log("YOU WON!");
+            //Debug.Log("YOU WON!");
             printed = true;
+
+            winScreen.SetActive(true);
+            gameEnded = true;
+
         }
     }
 }
