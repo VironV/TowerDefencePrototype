@@ -9,12 +9,12 @@ public class WinScreenController : MonoBehaviour {
 
     void Start()
     {
-        gameObject.SetActive(false);
-        //canvas.SetActive(false);
+        canvas.SetActive(false);
     }
 
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
 }
