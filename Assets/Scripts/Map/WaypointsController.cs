@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaypointsController : MonoBehaviour {
-
+    
     public static Transform[] points;
 
     private void Awake()

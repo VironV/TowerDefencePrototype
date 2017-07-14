@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpawnerPanelController : MonoBehaviour {
+public class SpawnerInfoPanel : MonoBehaviour {
 
+    [Header("Technical")]
     public Text monsterText;
     public Text waveText;
     public GameObject spawnerGO;

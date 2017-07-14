@@ -5,22 +5,30 @@ using UnityEngine.UI;
 
 public class MonsterController : MonoBehaviour {
 
+    [Header("Settings")]
     public float speed = 10;
     public int damage = 20;
     public int value = 25;
     public int startHP = 100;
     public Color damagedColor;
+
+    [Header("Technical")]
     public float changindColorSpeed;
     public Image heathBar;
-    
+    public float tooClose = 0.2f;
 
     private int HP;
     private Transform target;
     private int waypointIndex = 0;
-    private float tooClose = 0.2f;
     private Renderer rend;
     private Color startColor;
     private bool changingColor;
+    private SpawnController spawner;
+
+    public void SetSpawner(SpawnController spawn)
+    {
+        spawner = spawn;
+    }
 
     private void Start()
     {
@@ -33,29 +41,26 @@ public class MonsterController : MonoBehaviour {
 
 
     void Update() {
-        if (GameManager.gameEnded)
+        if (GameManager.IsGameEnded)
         {
             Destroy(gameObject);
         }
 
-        Color color = rend.material.color;
+        ChangeColor();
+        Move();
+    }
 
-        if (color == damagedColor)
-            changingColor = false;
-        if (changingColor)
-        {
-            rend.material.color = Color.Lerp(color, damagedColor, Time.deltaTime * changindColorSpeed);
-        }
-        else
-        {
-            if (color!=startColor)
-            {
-                rend.material.color = Color.Lerp(color, startColor, Time.deltaTime * changindColorSpeed);
-            }
-        }
-
+    //
+    // Movings, path
+    //
+    private void Move()
+    {
         Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
+        Vector3 toMove = dir.normalized * speed * Time.deltaTime;
+        if (dir.magnitude < toMove.magnitude)
+            transform.position = target.position;
+        else
+            transform.Translate(toMove, Space.World);
 
         if (Vector3.Distance(transform.position, target.position) <= tooClose)
         {
@@ -75,12 +80,9 @@ public class MonsterController : MonoBehaviour {
         target = WaypointsController.points[waypointIndex];
     }
 
-    void HitPlayer()
-    {
-        PlayerStats.DamagePlayer(damage);
-        Destroy(gameObject);
-    }
-
+    //
+    // Damage and stuff
+    //
     public void GetDamage(int inpDamage)
     {
         if (HP > 0)
@@ -96,9 +98,43 @@ public class MonsterController : MonoBehaviour {
       
     }
 
-    void Die()
+    private void Die()
     {
         PlayerStats.ChangeCurrency(value);
+        DestroySelf();
+    }
+
+    private void HitPlayer()
+    {
+        PlayerStats.DamagePlayer(damage);
+        DestroySelf();
+    }
+
+    private void DestroySelf()
+    {
+        spawner.AddToGraveyard();
         Destroy(gameObject);
+    }
+
+    //
+    // Visual
+    //
+    private void ChangeColor()
+    {
+        Color color = rend.material.color;
+
+        if (color == damagedColor)
+            changingColor = false;
+        if (changingColor)
+        {
+            rend.material.color = Color.Lerp(color, damagedColor, Time.deltaTime * changindColorSpeed);
+        }
+        else
+        {
+            if (color != startColor)
+            {
+                rend.material.color = Color.Lerp(color, startColor, Time.deltaTime * changindColorSpeed);
+            }
+        }
     }
 }

@@ -4,19 +4,30 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour {
 
+    [Header("Settings")]
+    public int startMoney = 500;
+    public int startHealth = 100;
+
     private static int _Money;
     private static int _Health;
+
+    private static int _startMoney;
+    private static int _startHealth;
 
     public static int Health { get { return _Health; } }
     public static int Money { get { return _Money; } }
 
-    public int startMoney = 500;
-    public int startHealth = 100;
-
     private void Start()
     {
-        _Money = startMoney;
-        _Health = startHealth;
+        _startHealth = startHealth;
+        _startMoney = startMoney;
+        ResetStats();
+    }
+
+    public static void ResetStats()
+    {
+        _Money = _startMoney;
+        _Health = _startHealth;
     }
 
     public static bool EnoughMoney(int cost)

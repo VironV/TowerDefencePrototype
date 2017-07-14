@@ -5,18 +5,18 @@ using UnityEngine.EventSystems;
 
 public class NodeController : MonoBehaviour {
 
+    [Header("Settings")]
     public Color hoverColor;
-    public Color notEnoughColor;
-    public Vector3 offset;
 
-    [Header("Optional")]
+    [Header("Technical")]
+    public Vector3 offset;
     public GameObject tower;
 
     private string towerTitle;
     private Color startColor;
     private Renderer rend;
     private BuildManager buildManager;
-    private NodeUI nodeUI;
+    private NodeUISetter nodeUI;
 
     public Vector3 BuildPosition()
     {
@@ -29,8 +29,8 @@ public class NodeController : MonoBehaviour {
     {
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
-        buildManager = BuildManager.instance;
-        nodeUI = NodeUI.instance;
+        buildManager = BuildManager.GetInstance;
+        nodeUI = NodeUISetter.GetInstance;
     }
 
     public void SetTower(GameObject tower, string title)
@@ -43,17 +43,19 @@ public class NodeController : MonoBehaviour {
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
+
+        buildManager.SelectNode(this);
         if (tower != null)
             nodeUI.ShowSellUI(this);
         else
-            nodeUI.ShowBuildUI(this);
-        
-        buildManager.SelectNode(this);
+            nodeUI.ShowBuildUI(this);  
     }
 
+    //
+    // Coloring nodes with mouse
+    //
     void OnMouseEnter()
     {
-
         if (EventSystem.current.IsPointerOverGameObject())
             return;
         rend.material.color = hoverColor;

@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SellUpgradeController : MonoBehaviour {
+public class SellUpgradeUIController : MonoBehaviour {
 
-    BuildManager buildmanager;
-    NodeUI nodeUI;
+    private BuildManager buildmanager;
+    private NodeUISetter nodeUI;
 
     void Start()
     {
-        buildmanager = BuildManager.instance;
-        nodeUI = NodeUI.instance;
+        buildmanager = BuildManager.GetInstance;
+        nodeUI = NodeUISetter.GetInstance;
     }
 
+    //
+    // Buttons
+    //
     public void SellTower()
     {
         buildmanager.SellTower();

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class PlayerUI : MonoBehaviour {
+public class CastleInfoPanel : MonoBehaviour {
 
+    [Header("Technical")]
     public Text moneyText;
     public Text HPText;
     public int changingMoneySpeed=10;
@@ -20,7 +21,6 @@ public class PlayerUI : MonoBehaviour {
     }
 
     void Update () {
-   
         money =  Mathf.Lerp(money, PlayerStats.Money, Time.deltaTime * changingMoneySpeed);
         if (Mathf.Abs(money - PlayerStats.Money) < 1)
             money = PlayerStats.Money;

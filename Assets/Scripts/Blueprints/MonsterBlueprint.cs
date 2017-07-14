@@ -5,10 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class MonsterBlueprint{
 
-    public GameObject prefab;
-    //public int value;
-    //public int speed;
-    //public int damage;
-    //public int startHP;
+    [Header("Settings")]
     public char code;
+
+    [Header("Techical")]
+    public GameObject prefab;
 }

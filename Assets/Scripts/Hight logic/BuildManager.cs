@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class BuildManager : MonoBehaviour {
 
-    public static BuildManager instance;
+    [Header("Technical")]
+    public GameObject standartTower;
+    public GameObject missleTower;
+
+    private static BuildManager instance;
 
     private NodeController selectedNode;
 
-    public GameObject standartTower;
-    public GameObject missleTower;
+    public static BuildManager GetInstance { get { return instance; } }
 
     void Awake() {
         if (instance != null)
@@ -24,19 +27,14 @@ public class BuildManager : MonoBehaviour {
 
     public void SelectNode(NodeController node)
     {
-        if (node.tower!=null)
-        {
-
-        }
         selectedNode = node;
     }
 
-    public void BuildTower(TowerBlueprint _tower)
+    public void BuildTower(TowerBlueprint towerBP)
     {
-        if (_tower!=null && selectedNode!=null && PlayerStats.ChangeCurrency(-_tower.cost))
+        if (towerBP!=null && selectedNode!=null && PlayerStats.ChangeCurrency(-towerBP.cost))
         {
-            GameObject tower = (GameObject)Instantiate(_tower.prefab, selectedNode.BuildPosition(), Quaternion.identity);
-            selectedNode.SetTower(tower,_tower.title);
+            SetTower(towerBP);
         }
     }
 
@@ -44,14 +42,13 @@ public class BuildManager : MonoBehaviour {
     {
         if (selectedNode!=null)
         {
-            TowerBlueprint towerBlueprint = Factory.GetTower("Upgraded " + selectedNode.GetTowerTitle);
+            TowerBlueprint towerBlueprint = TowersShop.GetTower("Upgraded " + selectedNode.GetTowerTitle);
             if (towerBlueprint!=null)
             {
                 if (towerBlueprint != null && selectedNode != null && PlayerStats.ChangeCurrency(-towerBlueprint.cost))
                 {
                     Destroy(selectedNode.tower);
-                    GameObject tower = (GameObject)Instantiate(towerBlueprint.prefab, selectedNode.BuildPosition(), Quaternion.identity);
-                    selectedNode.SetTower(tower, towerBlueprint.title);
+                    SetTower(towerBlueprint);
                 }
             }
         }
@@ -61,7 +58,7 @@ public class BuildManager : MonoBehaviour {
     {
         if (selectedNode!=null)
         {
-            TowerBlueprint towerBlueprint = Factory.GetTower(selectedNode.GetTowerTitle);
+            TowerBlueprint towerBlueprint = TowersShop.GetTower(selectedNode.GetTowerTitle);
             if (towerBlueprint!=null)
             {
                 Destroy(selectedNode.tower);
@@ -70,5 +67,11 @@ public class BuildManager : MonoBehaviour {
             }
             
         }
+    }
+
+    private void SetTower(TowerBlueprint towerBlueprint)
+    {
+        GameObject tower = (GameObject)Instantiate(towerBlueprint.prefab, selectedNode.BuildPosition(), Quaternion.identity);
+        selectedNode.SetTower(tower, towerBlueprint.title);
     }
 }

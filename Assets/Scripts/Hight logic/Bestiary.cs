@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class Bestiary : MonoBehaviour {
 
+    [Header("Technical")]
+    public string monsterTag;
     public MonsterBlueprint[] monstersTypes;
-    public string tag;
 
-    public static MonsterBlueprint[] monsters;
-    public static string monsterTag;
+    private static string monsterTagStatic;
+    private static MonsterBlueprint[] monsters;   
 
     private void Start()
     {
         monsters = monstersTypes;
-        monsterTag = tag;
+        monsterTagStatic = monsterTag;
     }
+
+    public static string GetMonsterTag { get { return monsterTagStatic; } }
 
     public static GameObject GetMonster(char type)
     {

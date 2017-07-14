@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Factory : MonoBehaviour {
+public class TowersShop : MonoBehaviour {
 
+    [Header("Settings")]
     public TowerBlueprint[] towersTypes;
 
-    public static TowerBlueprint[] towers;
+    private static TowerBlueprint[] towers;
 
     private void Start()
     {

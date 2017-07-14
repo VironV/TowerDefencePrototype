@@ -4,78 +4,61 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    public float checksInSec = 2;
+    [Header("Technical")]
+    public float endChecksInSec = 2;
     public GameObject castle;
     public GameObject levelOverlay;
-    //public GameObject gameoverUI;
-    //public GameObject winScreen;
 
-    public static bool gameEnded;
+    private static bool gameEnded;
 
-    private LevelOverlay lvlOVerlay;
-    private bool printed = false;
-    private static bool waitTillDies;
-    private float countdown = 0f;
+    private LevelOverlayController lvlOVerlay;
+    private bool workIsDone = false;
+    private static bool win;
+    private GameObject[] lastMonsters;
+
+    public static bool IsGameEnded { get { return gameEnded; } }
 
     private void Start()
     {
         gameEnded = false;
-        waitTillDies = false;
-        lvlOVerlay = levelOverlay.GetComponent<LevelOverlay>();
+        win = false;
+        lvlOVerlay = levelOverlay.GetComponent<LevelOverlayController>();
     }
 
-    void Update() {
+    public static void SetWin()
+    {
+        win = true;
+    }
 
+    void Update()
+    {
         if (PlayerStats.Health <= 0)
         {
             GameOver();
             return;
         }
 
-        if (waitTillDies)
-        {
-            if (countdown <= 0)
-            {
-                GameObject go = GameObject.FindGameObjectWithTag("Monster");
-                if (go == null)
-                {
-                    Win();
-                }
-
-                countdown = 1 / checksInSec;
-            }
-            countdown -= Time.deltaTime;
-        }
+        if (win)
+            Win();
     }
 
     void GameOver()
     {
-        if (!printed)
+        if (!workIsDone)
         {
             lvlOVerlay.SetLosePanel();
-            //gameoverUI.SetActive(true);
-            //Debug.Log("GAME OVER");
-            printed = true;
-
+            workIsDone = true;
             castle.GetComponent<CastleController>().Explode();
-            
             gameEnded = true;
         }
     }
 
-    public static void AlmostWin()
-    {
-        waitTillDies = true;
-    }
-
     void Win()
     {
-        if (!printed)
+        if (!workIsDone)
         {
             lvlOVerlay.SetWinPanel();
-            //winScreen.SetActive(true);
-            //Debug.Log("YOU WON!");
-            printed = true;
+            workIsDone = true;
             gameEnded = true;
 
         }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CastleController : MonoBehaviour {
 
+    [Header("Techical")]
     public GameObject particles;
     public GameObject additionMesh;
 
@@ -12,7 +13,6 @@ public class CastleController : MonoBehaviour {
         GameObject ptl = Instantiate(particles, transform.position, transform.rotation);
         Destroy(ptl, 6f);
 
-        //Destroy(gameObject);
         Destroy(gameObject.GetComponent<Renderer>());
         Destroy(additionMesh);
     }

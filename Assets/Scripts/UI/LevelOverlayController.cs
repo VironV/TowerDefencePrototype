@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelOverlay : MonoBehaviour {
+public class LevelOverlayController : MonoBehaviour {
 
+    [Header("Settings")]
+    public string nextLevel;
+
+    [Header("Technical")]
+    public string mainMenuScene;
     public GameObject pauseUI;
     public GameObject winUI;
     public GameObject loseUI;
-
-    public string nextLevel;
-    public string mainMenuScene;
 
     private bool gameEnded;
 
@@ -39,11 +41,14 @@ public class LevelOverlay : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !gameEnded)
         {
-            Toggle();
+            PauseToggle();
         }
     }
 
-    public void Toggle()
+    //
+    // Buttons
+    //
+    public void PauseToggle()
     {
         pauseUI.SetActive(!pauseUI.activeSelf);
 
@@ -61,18 +66,34 @@ public class LevelOverlay : MonoBehaviour {
     {
         if (pauseUI.activeSelf)
             Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Menu()
     {
         if (pauseUI.activeSelf)
             Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuScene);
+        LoadScene(mainMenuScene);
     }
 
     public void NextLevel()
     {
-        SceneManager.LoadScene(nextLevel);
+        LoadScene(nextLevel);
+    }
+
+
+    //
+    // Loading scenes
+    //
+    private void LoadScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+        PlayerStats.ResetStats();
+    }
+
+    private void LoadScene(int scene)
+    {
+        SceneManager.LoadScene(scene);
+        PlayerStats.ResetStats();
     }
 }

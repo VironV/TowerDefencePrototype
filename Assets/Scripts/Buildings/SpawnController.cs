@@ -4,37 +4,35 @@ using UnityEngine;
 
 public class SpawnController : MonoBehaviour {
 
-    //TODO: make script to find array of spawner and use them automatically
+    [Header("Time settings")]
     public float startTime;
     public float betweenSpawn;
     public float betweenWaves;
-    //public int wavesCount;
-    //public int monsterCount;
 
+    [Header("Wave structure settings")]
     public string[] waves;
+
     private int wavesRemain;
     private int monstersRemain;
+    private int waveGraveyard;
+    private int waveStartCount;
+    private bool wavesEnded;
 
     public int GetWavesRemain { get { return wavesRemain; } }
     public int GetMonstersRemain { get { return monstersRemain; } }
 
     void Start()
     {
+        wavesEnded = false;
         StartCoroutine(SpawnWaves());
         wavesRemain = waves.Length;
         monstersRemain = wavesRemain == 0 ? 0 : CalculateMonstersRemain(waves[0]);
     }
 
-    private int CalculateMonstersRemain(string wave)
+    private void Update()
     {
-        int remain = 0;
-        for (int i=0; i<wave.Length;i++)
-        {
-            if (wave[i] == '-' || wave[i] == '0')
-                continue;
-            remain++;
-        }
-        return remain;
+        if (waveGraveyard == waveStartCount && wavesEnded)
+            GameManager.SetWin();
     }
 
     IEnumerator SpawnWaves()
@@ -44,6 +42,8 @@ public class SpawnController : MonoBehaviour {
         for (int i = 0; i < waves.Length; i++)
         {
             monstersRemain = CalculateMonstersRemain(waves[i]);
+            waveStartCount = (waveStartCount-waveGraveyard)+ monstersRemain;
+            waveGraveyard = 0;
             for (int j = 0; j < waves[i].Length; j++)
             {
                 spawnMonster(waves[i][j]);
@@ -51,10 +51,13 @@ public class SpawnController : MonoBehaviour {
                 if (waves[i][j] != '-' && waves[i][j] != '0')
                     monstersRemain--;
             }
-            yield return new WaitForSeconds(betweenWaves);
             wavesRemain--;
+            if (wavesRemain<=0)
+                wavesEnded = true;
+            yield return new WaitForSeconds(betweenWaves);
+            
         }
-        GameManager.AlmostWin();
+        wavesEnded = true;
     }
 
     void spawnMonster(char type)
@@ -64,9 +67,27 @@ public class SpawnController : MonoBehaviour {
         {
             Vector3 spawnPosition = transform.position;
             Quaternion spawnRotation = Quaternion.Euler(new Vector3(0, 90, 0));
-            Instantiate(toSpawn, spawnPosition, spawnRotation);
+            GameObject go=Instantiate(toSpawn, spawnPosition, spawnRotation);
+            go.GetComponent<MonsterController>().SetSpawner(this);
         }
         else
             return;
+    }
+
+    private int CalculateMonstersRemain(string wave)
+    {
+        int remain = 0;
+        for (int i = 0; i < wave.Length; i++)
+        {
+            if (wave[i] == '-' || wave[i] == '0')
+                continue;
+            remain++;
+        }
+        return remain;
+    }
+
+    public void AddToGraveyard()
+    {
+        waveGraveyard++;
     }
 }
