@@ -6,11 +6,13 @@ public class GameManager : MonoBehaviour {
 
     public float checksInSec = 2;
     public GameObject castle;
-    public GameObject gameoverUI;
-    public GameObject winScreen;
+    public GameObject levelOverlay;
+    //public GameObject gameoverUI;
+    //public GameObject winScreen;
 
     public static bool gameEnded;
 
+    private LevelOverlay lvlOVerlay;
     private bool printed = false;
     private static bool waitTillDies;
     private float countdown = 0f;
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour {
     {
         gameEnded = false;
         waitTillDies = false;
+        lvlOVerlay = levelOverlay.GetComponent<LevelOverlay>();
     }
 
     void Update() {
@@ -49,11 +52,13 @@ public class GameManager : MonoBehaviour {
     {
         if (!printed)
         {
+            lvlOVerlay.SetLosePanel();
+            //gameoverUI.SetActive(true);
             //Debug.Log("GAME OVER");
             printed = true;
 
             castle.GetComponent<CastleController>().Explode();
-            gameoverUI.SetActive(true);
+            
             gameEnded = true;
         }
     }
@@ -67,10 +72,10 @@ public class GameManager : MonoBehaviour {
     {
         if (!printed)
         {
+            lvlOVerlay.SetWinPanel();
+            //winScreen.SetActive(true);
             //Debug.Log("YOU WON!");
             printed = true;
-
-            winScreen.SetActive(true);
             gameEnded = true;
 
         }

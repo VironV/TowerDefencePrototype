@@ -9,7 +9,7 @@ public class WinScreenController : MonoBehaviour {
 
     void Start()
     {
-        canvas.SetActive(false);
+        //canvas.SetActive(false);
     }
 
     public void Retry()

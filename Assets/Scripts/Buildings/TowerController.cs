@@ -25,6 +25,7 @@ public class TowerController : MonoBehaviour {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
 	}
 
+    
     void UpdateTarget()
     {
         GameObject[] monsters = GameObject.FindGameObjectsWithTag(monsterTag);
@@ -51,8 +52,41 @@ public class TowerController : MonoBehaviour {
         }
     }
 
-	
-	void Update () {
+    /*
+    void UpdateTarget()
+    {
+        Transform nearestTarget = null;
+        float shortestDistance = Mathf.Infinity;
+
+        Collider[] monsters = Physics.OverlapSphere(transform.position, range);
+        for (int i=0; i<monsters.Length;i++)
+        {
+            MonsterController mc = monsters[i].GetComponent<MonsterController>();
+            if (mc != null)
+            {
+                Transform mcT = mc.gameObject.transform;
+                float dist = Vector3.Distance(transform.position, mcT.position);
+                if (dist < shortestDistance)
+                {
+                    nearestTarget = mcT;
+                    shortestDistance = dist;
+                }
+            }
+        }
+
+        if (nearestTarget!=null)
+        {
+            target = nearestTarget;
+        }
+        else
+        {
+            target = null;
+        }
+    }
+    */
+
+
+    void Update () {
         if (target == null)
             return;
 

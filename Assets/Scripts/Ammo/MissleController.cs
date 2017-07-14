@@ -18,12 +18,6 @@ public class MissleController : MonoBehaviour {
 
     void Update()
     {
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Vector3 dir = target - transform.position;
         float distanceToGo = speed * Time.deltaTime;
 

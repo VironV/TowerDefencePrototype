@@ -5,13 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameOverController : MonoBehaviour {
 
-    public GameObject canvas;
-
-    void Start()
-    {
-        canvas.SetActive(false);    
-    }
-
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
