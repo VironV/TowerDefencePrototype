@@ -15,17 +15,21 @@ public class MainMenuController : MonoBehaviour {
     public GameObject levelSelecUI;
 
     private Vector3 target;
+    private Vector3 mainPosition;
+    private Vector3 levelSelectPosition;
 
     private void Awake()
     {
         target = cam.position;
+        mainPosition = cam.position;
+        levelSelectPosition = cam.position + (new Vector3(moveDist, 0, 0));
     }
 
     private void Update()
     {
         if (target!=cam.position)
         {
-            Debug.Log("target!=current");
+            //Debug.Log("target!=current");
             cam.position = Vector3.Lerp(cam.position, target, Time.deltaTime * speed);
         }
     }
@@ -51,12 +55,10 @@ public class MainMenuController : MonoBehaviour {
 
     private void MoveCamera(bool toLevels)
     {
-        Vector3 movement;
         if (toLevels)
-            movement = new Vector3(moveDist, 0, 0);
+            target = levelSelectPosition;
         else
-            movement = new Vector3(-moveDist, 0, 0);
-        target = cam.position + movement;
+            target = mainPosition;
     }
 
     public void LoadLevel(int id)

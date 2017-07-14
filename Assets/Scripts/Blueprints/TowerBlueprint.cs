@@ -8,5 +8,6 @@ public class TowerBlueprint{
     public GameObject prefab;
     public int cost;
     public int sellCost;
+    public int upgradeCost;
     public string title;
 }

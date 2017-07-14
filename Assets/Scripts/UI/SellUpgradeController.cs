@@ -18,4 +18,10 @@ public class SellUpgradeController : MonoBehaviour {
         buildmanager.SellTower();
         nodeUI.Hide();
     }
+
+    public void UpgradeTower()
+    {
+        buildmanager.UpgradeTower();
+        nodeUI.Hide();
+    }
 }

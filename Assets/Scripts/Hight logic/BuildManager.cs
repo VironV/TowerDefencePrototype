@@ -40,6 +40,23 @@ public class BuildManager : MonoBehaviour {
         }
     }
 
+    public void UpgradeTower()
+    {
+        if (selectedNode!=null)
+        {
+            TowerBlueprint towerBlueprint = Factory.GetTower("Upgraded " + selectedNode.GetTowerTitle);
+            if (towerBlueprint!=null)
+            {
+                if (towerBlueprint != null && selectedNode != null && PlayerStats.ChangeCurrency(-towerBlueprint.cost))
+                {
+                    Destroy(selectedNode.tower);
+                    GameObject tower = (GameObject)Instantiate(towerBlueprint.prefab, selectedNode.BuildPosition(), Quaternion.identity);
+                    selectedNode.SetTower(tower, towerBlueprint.title);
+                }
+            }
+        }
+    }
+
     public void SellTower()
     {
         if (selectedNode!=null)

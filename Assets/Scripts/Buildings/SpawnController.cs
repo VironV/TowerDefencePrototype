@@ -18,11 +18,24 @@ public class SpawnController : MonoBehaviour {
     public int GetWavesRemain { get { return wavesRemain; } }
     public int GetMonstersRemain { get { return monstersRemain; } }
 
-	void Start () {
+    void Start()
+    {
         StartCoroutine(SpawnWaves());
         wavesRemain = waves.Length;
-        monstersRemain = wavesRemain==0 ? 0 : waves[0].Length;
-	}
+        monstersRemain = wavesRemain == 0 ? 0 : CalculateMonstersRemain(waves[0]);
+    }
+
+    private int CalculateMonstersRemain(string wave)
+    {
+        int remain = 0;
+        for (int i=0; i<wave.Length;i++)
+        {
+            if (wave[i] == '-' || wave[i] == '0')
+                continue;
+            remain++;
+        }
+        return remain;
+    }
 
     IEnumerator SpawnWaves()
     {
@@ -30,12 +43,13 @@ public class SpawnController : MonoBehaviour {
         wavesRemain = waves.Length;
         for (int i = 0; i < waves.Length; i++)
         {
-            monstersRemain = waves[i].Length;
+            monstersRemain = CalculateMonstersRemain(waves[i]);
             for (int j = 0; j < waves[i].Length; j++)
             {
                 spawnMonster(waves[i][j]);
                 yield return new WaitForSeconds(betweenSpawn);
-                monstersRemain--;
+                if (waves[i][j] != '-' && waves[i][j] != '0')
+                    monstersRemain--;
             }
             yield return new WaitForSeconds(betweenWaves);
             wavesRemain--;

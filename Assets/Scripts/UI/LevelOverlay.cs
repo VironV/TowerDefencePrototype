@@ -59,11 +59,15 @@ public class LevelOverlay : MonoBehaviour {
 
     public void Retry()
     {
+        if (pauseUI.activeSelf)
+            Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Menu()
     {
+        if (pauseUI.activeSelf)
+            Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuScene);
     }
 

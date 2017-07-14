@@ -15,6 +15,7 @@ public class NodeUI : MonoBehaviour {
     public GameObject sellUI;
     public GameObject nodeUI;
     public Text sellText;
+    public Text upgradeText;
     public Text gunTowerText;
     public Text MissleTowerText;
 
@@ -47,6 +48,19 @@ public class NodeUI : MonoBehaviour {
         }
     }
 
+    private void SetUpgradeText()
+    {
+        NodeController node = BuildManager.instance.GetSelectedNode;
+        TowerBlueprint tb = Factory.GetTower(node.GetTowerTitle);
+        if (tb!=null)
+        {
+            if (tb.upgradeCost == 0)
+                upgradeText.text = "Can't\nupgrade";
+            else
+                upgradeText.text = "Upgrade\n$" + tb.upgradeCost;
+        }
+    }
+
     private void SetShopText()
     {
         TowerBlueprint tbGun = Factory.GetTower("Standart");
@@ -75,6 +89,7 @@ public class NodeUI : MonoBehaviour {
         hidden = false;
         SetTarget(node);
         SetSellText();
+        SetUpgradeText();
         sellUI.SetActive(true);
         buildUI.SetActive(false);
 
