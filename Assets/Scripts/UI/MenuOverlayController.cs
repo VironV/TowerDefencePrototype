@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(MenuCameraMover))]
 public class MenuOverlayController : MonoBehaviour {
 
     [Header("Settings")]

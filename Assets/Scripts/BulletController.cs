@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour {
+public class BulletController : MonoBehaviour, IAmmo {
 
     [Header("Settings")]
     public float speed=70f;
@@ -72,7 +72,7 @@ public class BulletController : MonoBehaviour {
     {
         if (targetGO!=null)
         {
-            MonsterController mc = targetGO.GetComponent<MonsterController>();
+            MonsterBehaviour mc = targetGO.GetComponent<MonsterBehaviour>();
             mc.GetDamage(damage);
         }
 
@@ -88,7 +88,7 @@ public class BulletController : MonoBehaviour {
         Collider[] monsters = Physics.OverlapSphere(transform.position, explosionRange);
         for (int i = 0; i < monsters.Length; i++)
         {
-            MonsterController mc = monsters[i].GetComponent<MonsterController>();
+            MonsterBehaviour mc = monsters[i].GetComponent<MonsterBehaviour>();
             if (mc != null)
             {
                 mc.GetDamage(damage);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnController : MonoBehaviour {
+public class SpawnController : MonoBehaviour, ISpawn {
 
     [Header("Time settings")]
     public float startTime;
@@ -15,7 +15,7 @@ public class SpawnController : MonoBehaviour {
     private int wavesRemain;
     private int monstersRemain;
     private int waveGraveyard;
-    private int waveStartCount;
+    private int waveMonstersStartCount;
     private bool wavesEnded;
 
     public int GetWavesRemain { get { return wavesRemain; } }
@@ -31,7 +31,7 @@ public class SpawnController : MonoBehaviour {
 
     private void Update()
     {
-        if (waveGraveyard == waveStartCount && wavesEnded)
+        if (waveGraveyard == waveMonstersStartCount && wavesEnded)
             GameManager.SetWin();
     }
 
@@ -42,7 +42,7 @@ public class SpawnController : MonoBehaviour {
         for (int i = 0; i < waves.Length; i++)
         {
             monstersRemain = CalculateMonstersRemain(waves[i]);
-            waveStartCount = (waveStartCount-waveGraveyard)+ monstersRemain;
+            waveMonstersStartCount = (waveMonstersStartCount-waveGraveyard)+ monstersRemain;
             waveGraveyard = 0;
             for (int j = 0; j < waves[i].Length; j++)
             {
@@ -68,7 +68,7 @@ public class SpawnController : MonoBehaviour {
             Vector3 spawnPosition = transform.position;
             Quaternion spawnRotation = Quaternion.Euler(new Vector3(0, 90, 0));
             GameObject go=Instantiate(toSpawn, spawnPosition, spawnRotation);
-            go.GetComponent<MonsterController>().SetSpawner(this);
+            go.GetComponent<MonsterBehaviour>().SetSpawner(this);
         }
         else
             return;

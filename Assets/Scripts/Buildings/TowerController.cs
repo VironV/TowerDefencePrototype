@@ -2,68 +2,66 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerController : MonoBehaviour {
-
+[System.Serializable]
+public class TowerController {
 
     [Header("Seetings")]
     public float range;
     public float rotationSpeed;
     public float fireRate = 2;
 
-    [Header("Techical")]
-    public Transform rotator;
-    public Transform bulletSpawn;
-    public GameObject bullet;
+    private float fireCountdown = 0f;
 
-    private float fireCountdown=0f;
-    private Transform target;
-    private string monsterTag = "Monster";
+    private ITower tower;
 
-    void Start () {
-        monsterTag = Bestiary.GetMonsterTag;
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
-	}
-
-    void Update () {
-        if (target == null)
-            return;
-
-        Vector3 dir = target.position - transform.position;
-        Quaternion quatRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = Quaternion.Lerp(rotator.rotation, quatRotation,Time.deltaTime*rotationSpeed).eulerAngles;
-        rotator.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-        if (fireCountdown<=0f)
-        {
-            Shoot();
-            fireCountdown = 1f / fireRate;
-        }
-
-        fireCountdown -=Time.deltaTime;
-	}
-
-    void Shoot()
+    public void SetTowerController(ITower tower)
     {
-        GameObject bulletInstance = (GameObject)Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
-        if (bulletInstance!=null)
+        this.tower = tower;
+    }
+
+    public void Rotate(Vector3 target, Vector3 positionSelf, Quaternion rotationSelf)
+    {
+        Vector3 dir = target - positionSelf;
+        Quaternion quatRotation = Quaternion.LookRotation(dir);
+        if (quatRotation!=rotationSelf)
         {
-            BulletController bc = bulletInstance.GetComponent<BulletController>();
-            if (bc!=null)
-                bc.Seek(target);
+            tower.Rotate(quatRotation,rotationSpeed);
         }
     }
 
-    // Finding with tags
-    void UpdateTarget()
+    public bool isReadyToShoot()
     {
-        GameObject[] monsters = GameObject.FindGameObjectsWithTag(monsterTag);
+        return (fireCountdown <= 0);
+    }
 
+    public void CheckToShoot()
+    {
+        if (isReadyToShoot())
+        {
+            tower.Shoot();
+            ResetCountdown();
+        }    
+    }
+
+    public void TicCountdown()
+    {
+        fireCountdown -= Time.deltaTime;
+    }
+
+    private void ResetCountdown()
+    {
+        fireCountdown = 1f / fireRate;
+    }
+
+    // Finding with tags
+    public void UpdateTarget(GameObject[] monsters, Vector3 positionSelf)
+    {    
         GameObject nearestTarget = null;
         float shortestDistance = Mathf.Infinity;
 
         foreach (GameObject monster in monsters)
         {
-            float dist = Vector3.Distance(transform.position, monster.transform.position);
+            float dist = Vector3.Distance(positionSelf, monster.transform.position);
             if (dist < shortestDistance)
             {
                 nearestTarget = monster;
@@ -73,17 +71,19 @@ public class TowerController : MonoBehaviour {
 
         if (nearestTarget != null && shortestDistance <= range)
         {
-            target = nearestTarget.transform;
+            tower.UpdateTarget(nearestTarget.transform);
         }
         else
         {
-            target = null;
+            tower.UpdateTarget(null);
         }
+
+        
     }
 
     /*
     // Finding with colliders
-    void UpdateTarget()
+    public void UpdateTarget()
     {
         Transform nearestTarget = null;
         float shortestDistance = Mathf.Infinity;
@@ -112,13 +112,8 @@ public class TowerController : MonoBehaviour {
         {
             target = null;
         }
+
+        tower.UpdateTarget(target);
     }
     */
-
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
-    }
 }

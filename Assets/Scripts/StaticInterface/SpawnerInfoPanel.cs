@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(SpawnController))]
 public class SpawnerInfoPanel : MonoBehaviour {
 
     [Header("Technical")]
