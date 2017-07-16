@@ -13,7 +13,7 @@ public class ShopUIController : MonoBehaviour {
     void Start()
     {
         buildmanager = BuildManager.GetInstance;
-        nodeUI = NodeUISetter.GetInstance;
+        nodeUI = buildmanager.nodeUISetter;
         standartTower = TowersShop.GetTower("Standart");
         missleTower = TowersShop.GetTower("Missle");
     }

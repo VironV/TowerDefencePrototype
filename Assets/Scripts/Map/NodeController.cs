@@ -30,7 +30,7 @@ public class NodeController : MonoBehaviour {
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
         buildManager = BuildManager.GetInstance;
-        nodeUI = NodeUISetter.GetInstance;
+        nodeUI = buildManager.nodeUISetter;
     }
 
     // Remebering tower

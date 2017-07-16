@@ -7,6 +7,7 @@ public class BuildManager : MonoBehaviour {
     [Header("Technical")]
     public GameObject standartTower;
     public GameObject missleTower;
+    public NodeUISetter nodeUISetter;
 
     private static BuildManager instance;
 

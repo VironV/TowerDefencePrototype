@@ -32,11 +32,6 @@ public class PlayerStats : MonoBehaviour {
         _Health = _startHealth;
     }
 
-    public static bool EnoughMoney(int cost)
-    {
-        return cost <= _Money;
-    }
-
     public static bool ChangeCurrency(int change)
     {
         if (_Money + change < 0)

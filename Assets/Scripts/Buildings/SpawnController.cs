@@ -17,8 +17,8 @@ public class SpawnController : MonoBehaviour, ISpawn {
 
     private int wavesRemain;
     private int monstersRemain;
-    private int waveGraveyard;
-    private int waveMonstersStartCount;
+    private int graveyard;
+    private int monsterCountOverall;
     private bool wavesEnded;
 
     public int GetWavesRemain { get { return wavesRemain; } }
@@ -30,11 +30,13 @@ public class SpawnController : MonoBehaviour, ISpawn {
         StartCoroutine(SpawnWaves());
         wavesRemain = waves.Length;
         monstersRemain = wavesRemain == 0 ? 0 : CalculateMonstersRemain(waves[0]);
+        graveyard = 0;
+        monsterCountOverall = 0;
     }
 
     private void Update()
     {
-        if (waveGraveyard == waveMonstersStartCount && wavesEnded)
+        if (graveyard == monsterCountOverall && wavesEnded)
             GameManager.SetWin();
     }
 
@@ -44,13 +46,9 @@ public class SpawnController : MonoBehaviour, ISpawn {
         wavesRemain = waves.Length;
         for (int i = 0; i < waves.Length; i++)
         {
-            
             monstersRemain = CalculateMonstersRemain(waves[i]);
-            waveMonstersStartCount = (waveMonstersStartCount-waveGraveyard)+ monstersRemain;
-            waveGraveyard = 0;
             for (int j = 0; j < waves[i].Length; j++)
             {
-                
                 spawnMonster(waves[i][j]);
                 yield return new WaitForSeconds(betweenSpawn);
                 if (waves[i][j] != '-' && waves[i][j] != '0')
@@ -59,8 +57,6 @@ public class SpawnController : MonoBehaviour, ISpawn {
             
             yield return new WaitForSeconds(betweenWaves);
             wavesRemain--;
-            if (wavesRemain < 0)
-                wavesEnded = true;
         }
         wavesEnded = true;
     }
@@ -70,6 +66,7 @@ public class SpawnController : MonoBehaviour, ISpawn {
         GameObject toSpawn = Bestiary.GetMonster(type);
         if (toSpawn!=null)
         {
+            monsterCountOverall++;
             Vector3 spawnPosition = transform.position;
             Quaternion spawnRotation = Quaternion.Euler(new Vector3(0, 90, 0));
             GameObject go=Instantiate(toSpawn, spawnPosition, spawnRotation);
@@ -93,6 +90,6 @@ public class SpawnController : MonoBehaviour, ISpawn {
 
     public void AddToGraveyard()
     {
-        waveGraveyard++;
+        graveyard++;
     }
 }

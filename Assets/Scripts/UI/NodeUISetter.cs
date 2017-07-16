@@ -13,28 +13,14 @@ public class NodeUISetter : MonoBehaviour {
     public Text gunTowerText;
     public Text MissleTowerText;
 
-    private static NodeUISetter instance;
-
     private NodeController target;
     private BuildManager bm;
     private bool hidden;
-    private int sellCost;
-
-    public static NodeUISetter GetInstance { get { return instance; } }
-
-    void Awake()
-    {
-        if (instance != null)
-        {
-            Debug.Log("Instance already exists!");
-            return;
-        }
-        instance = this;
-        bm = BuildManager.GetInstance;
-    }
 
     private void Start()
     {
+
+        bm = BuildManager.GetInstance;
         Hide();
         hidden = false;
     }

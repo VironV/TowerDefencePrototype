@@ -10,7 +10,7 @@ public class SellUpgradeUIController : MonoBehaviour {
     void Start()
     {
         buildmanager = BuildManager.GetInstance;
-        nodeUI = NodeUISetter.GetInstance;
+        nodeUI = buildmanager.nodeUISetter;
     }
 
     //
