@@ -33,12 +33,14 @@ public class NodeController : MonoBehaviour {
         nodeUI = NodeUISetter.GetInstance;
     }
 
+    // Remebering tower
     public void SetTower(GameObject tower, string title)
     {
         this.tower = tower;
         towerTitle = title;
     }
 
+    // Calling NodeUI and buildManager
     private void OnMouseDown()
     {
         if (EventSystem.current.IsPointerOverGameObject())

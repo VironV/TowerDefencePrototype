@@ -59,6 +59,21 @@ public class MonsterTests {
         monster.ReceivedWithAnyArgs().ChangeColor(Color.black);
     }
 
+    [UnityTest]
+    public IEnumerable ItNotChangesColorWithZeroChangeSpeed()
+    {
+        IMonster monster = GetMonsterMock();
+        MonsterController controller = GetControllerMock(monster);
+
+        controller.changindColorSpeed = 0;
+        controller = SetWithSingleWaypoint(controller, monster);
+
+        controller.GetDamage(10);
+
+        yield return null;
+        monster.DidNotReceiveWithAnyArgs().ChangeColor(Color.black);
+    }
+
     // May be bad test - do not panic on failure
     [UnityTest]
     public IEnumerable itDies()

@@ -6,62 +6,66 @@ using UnityEngine;
 public class TowerController {
 
     [Header("Seetings")]
+    [Range(1, 50)]
     public float range;
+    [Range(5,50)]
     public float rotationSpeed;
+    [Range(0.01f, 25)]
     public float fireRate = 2;
 
     [Header("Technical]")]
     public float threshold = 20f;
 
     private float fireCountdown = 0f;
-    private Transform target;
+    //private Transform target;
 
     private ITower tower;
 
+
+    // calls from behaviour
     public void SetTowerController(ITower tower)
     {
         this.tower = tower;
-        target = null;
-    }
-
-    private Quaternion FindDirection(Vector3 positionSelf)
-    {
-        Vector3 dir = target.position - positionSelf;
-        return Quaternion.LookRotation(dir);
-    }
-
-    public void Rotate(Vector3 positionSelf, Quaternion rotationSelf)
-    {
-        Quaternion quatRotation= FindDirection(positionSelf);
-        if (quatRotation!=rotationSelf)
-        {
-            tower.Rotate(quatRotation,rotationSpeed);
-        }
-    }
-
-    public bool isTargetNull()
-    {
-        return target == null;
-    }
-
-    public void CheckToShoot(Quaternion rotation,Vector3 positionSelf)
-    {
-        Quaternion quatRotation = FindDirection(positionSelf);
-
-        if (Mathf.Abs(quatRotation.eulerAngles.y - rotation.eulerAngles.y) > threshold)
-            return;
-
-        if (fireCountdown <= 0)
-        {
-            tower.Shoot(target);
-            ResetCountdown();
-        }    
     }
 
     public void TicCountdown()
     {
         fireCountdown -= Time.deltaTime;
     }
+
+    public void Rotate(Vector3 positionSelf, Quaternion rotationSelf, Vector3 positionTarget)
+    {
+        Quaternion quatRotation= FindDirection(positionSelf,positionTarget);
+        if (CheckRotationToTarget(quatRotation,rotationSelf,threshold/2))
+        {
+            tower.Rotate(quatRotation,rotationSpeed);
+        }
+    }
+
+    public void CheckToShoot(Vector3 positionSelf, Quaternion rotationSelf,Vector3 positionTarget)
+    {
+        Quaternion quatRotation = FindDirection(positionSelf,positionTarget);
+        if (CheckRotationToTarget(quatRotation,rotationSelf, threshold))
+            return;
+
+        if (fireCountdown <= 0)
+        {
+            tower.Shoot();
+            ResetCountdown();
+        }    
+    }
+
+    //Helpers
+    private Quaternion FindDirection(Vector3 positionSelf,Vector3 positionTarget)
+    {
+        Vector3 dir = positionTarget - positionSelf;
+        return Quaternion.LookRotation(dir);
+    }
+
+    private bool CheckRotationToTarget(Quaternion quatRotation, Quaternion rotationSelf, float th)
+    {
+        return (Mathf.Abs(quatRotation.eulerAngles.y - rotationSelf.eulerAngles.y) > th);
+    } 
 
     private void ResetCountdown()
     {
@@ -85,19 +89,15 @@ public class TowerController {
         }
 
         if (nearestTarget != null && shortestDistance <= range)
-        {
-            target = nearestTarget.transform;
-        }
+            tower.UpdateTarget(nearestTarget.transform);
         else
-        {
-            target = null;
-        }
+            tower.UpdateTarget(null);
 
         
     }
 
     /*
-    // Finding with colliders
+    // Finding with colliders (alternative)
     public void UpdateTarget()
     {
         Transform nearestTarget = null;

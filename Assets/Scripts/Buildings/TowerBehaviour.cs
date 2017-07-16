@@ -11,9 +11,11 @@ public class TowerBehaviour : MonoBehaviour, ITower {
     public TowerController controller;
 
     private string monsterTag = "Monster";
+    private Transform target;
 
     void Start()
     {
+        target = null;
         controller.SetTowerController(this);
         monsterTag = Bestiary.GetMonsterTag;
         InvokeRepeating("AskToFindTarget", 0f, 0.5f);
@@ -23,34 +25,33 @@ public class TowerBehaviour : MonoBehaviour, ITower {
     {
         controller.TicCountdown();
 
-        if (controller.isTargetNull())
+        if (target==null)
             return;
 
-        controller.Rotate(transform.position, transform.rotation);
-        controller.CheckToShoot(rotator.rotation,transform.position);
+        controller.Rotate(transform.position,rotator.rotation,target.position);
+        controller.CheckToShoot(transform.position,rotator.rotation,target.position);
     }
 
+    // Controller interactions
     void AskToFindTarget()
     {
         GameObject[] monsters = GameObject.FindGameObjectsWithTag(monsterTag);
         controller.UpdateTarget(monsters,transform.position);
     }
 
-    private void OnDrawGizmosSelected()
+    public void UpdateTarget(Transform target)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, controller.range);
+        this.target = target;
     }
 
-    #region ITower implementation
-
+    // ITower functions
     public void Rotate(Quaternion quatRotation, float rotationSpeed)
     {
         Vector3 rotation = Quaternion.Lerp(rotator.rotation, quatRotation, Time.deltaTime * rotationSpeed).eulerAngles;
         rotator.rotation = Quaternion.Euler(0f, rotation.y, 0f);
     }
 
-    public void Shoot(Transform target)
+    public void Shoot()
     {
         GameObject bulletInstance = (GameObject)Instantiate(bullet, bulletSpawn.position, Quaternion.identity);
         if (bulletInstance!=null)
@@ -61,7 +62,11 @@ public class TowerBehaviour : MonoBehaviour, ITower {
         }
     }
 
-#endregion
+    //Helpers
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, controller.range);
+    }
 
-    
 }

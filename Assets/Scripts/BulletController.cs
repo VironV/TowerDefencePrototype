@@ -17,9 +17,9 @@ public class BulletController : MonoBehaviour, IAmmo {
     private Vector3 targetPlace;
 
     void Update()
-    { 
-        if (!targetFloor)
-            targetPlace = targetGO == null ? targetPlace : targetGO.position;
+    {
+        if (targetGO != null)
+            targetPlace = targetGO.position;
         Vector3 dir = targetPlace - transform.position;
         float distanceToGo = speed * Time.deltaTime;
 
@@ -30,17 +30,7 @@ public class BulletController : MonoBehaviour, IAmmo {
         }
 
         transform.Translate(dir.normalized * distanceToGo, Space.World);
-    }
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, explosionRange);
-    }
-
-    public void SetRotation(float y)
-    {
-        transform.rotation = Quaternion.Euler(90, 90+y, 90);
-    }
+    } 
 
     //
     // Seek target
@@ -56,6 +46,7 @@ public class BulletController : MonoBehaviour, IAmmo {
     private void SeekGO(Transform targetGO)
     {
         this.targetGO = targetGO;
+        targetPlace = targetGO.position;
     }
 
     private void SeekPlace(Vector3 targetPlace)
@@ -96,6 +87,7 @@ public class BulletController : MonoBehaviour, IAmmo {
     }
 
     // Finding exploding targets with colliders
+    // Also if monster have more than one collider - he takes more damage. That's intentional (now)
     void Explode()
     {
         Collider[] monsters = Physics.OverlapSphere(transform.position, explosionRange);
@@ -113,7 +105,7 @@ public class BulletController : MonoBehaviour, IAmmo {
     }
 
     /*
-    // Finding exploding targets with tags
+    // Finding exploding targets with tags (old bad version)
     void Explode()
     {
         GameObject[] monsters = GameObject.FindGameObjectsWithTag(Bestiary.monsterTag);
@@ -133,4 +125,16 @@ public class BulletController : MonoBehaviour, IAmmo {
         Destroy(gameObject);
     }
     */
+
+    // Helpers
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRange);
+    }
+
+    public void SetRotation(float y)
+    {
+        transform.rotation = Quaternion.Euler(90, 90 + y, 90);
+    }
 }

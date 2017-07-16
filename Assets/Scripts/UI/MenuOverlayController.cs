@@ -14,12 +14,28 @@ public class MenuOverlayController : MonoBehaviour {
     public GameObject cameraGO;
     public GameObject mainUI;
     public GameObject levelSelecUI;
+    public GameObject infoPanel;
 
     private MenuCameraMover mover;
 
     private void Start()
     {
         mover = cameraGO.GetComponent<MenuCameraMover>();
+        infoPanel.SetActive(false);
+
+        Resolution[] resolutions2 = Screen.resolutions;
+        foreach (Resolution res in resolutions2)
+        {
+            if (res.width < 1023 || res.height < 768)
+            {
+                if (Screen.fullScreen == false)
+                {
+                    Screen.SetResolution(1280, 768, false);
+                }
+
+            }
+
+        }
     }
 
     //
@@ -53,6 +69,14 @@ public class MenuOverlayController : MonoBehaviour {
         mover.MoveCamera(false);
         mainUI.SetActive(true);
         levelSelecUI.SetActive(false);
+    }
+
+    public void HelpInfo()
+    {
+        if (infoPanel.activeSelf)
+            infoPanel.SetActive(false);
+        else
+            infoPanel.SetActive(true);
     }
 
    

@@ -25,11 +25,13 @@ public class BuildManager : MonoBehaviour {
 
     public NodeController GetSelectedNode { get { return selectedNode; } }
 
+    // Calls from Node
     public void SelectNode(NodeController node)
     {
         selectedNode = node;
     }
 
+    // Actions
     public void BuildTower(TowerBlueprint towerBP)
     {
         if (towerBP!=null && selectedNode!=null && PlayerStats.ChangeCurrency(-towerBP.cost))
@@ -69,6 +71,7 @@ public class BuildManager : MonoBehaviour {
         }
     }
 
+    // Building
     private void SetTower(TowerBlueprint towerBlueprint)
     {
         GameObject tower = (GameObject)Instantiate(towerBlueprint.prefab, selectedNode.BuildPosition(), Quaternion.identity);

@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour {
 
     [Header("Settings")]
+    [Range(100, 5000)]
     public int startMoney = 500;
+    [Range(1, 1000)]
     public int startHealth = 100;
 
     private static int _Money;

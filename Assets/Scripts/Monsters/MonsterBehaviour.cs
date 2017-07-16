@@ -30,6 +30,7 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
         controller.Move(transform.position);
     }
 
+    // Controller intercations
     public void SetSpawner(ISpawn spawn)
     {
         spawner = spawn;
@@ -58,6 +59,12 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
     public void ChangeHealthBar(float p)
     {
         heathBar.fillAmount = p;
+    } 
+
+    public void HitPlayer(int damage)
+    {
+        PlayerStats.DamagePlayer(damage);
+        DestroySelf();
     }
 
     public void Die(int value)
@@ -66,12 +73,7 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
         DestroySelf();
     }
 
-    public void HitPlayer(int damage)
-    {
-        PlayerStats.DamagePlayer(damage);
-        DestroySelf();
-    }
-
+    // Destroing and calling spawner to count death
     private void DestroySelf()
     {
         spawner.AddToGraveyard();

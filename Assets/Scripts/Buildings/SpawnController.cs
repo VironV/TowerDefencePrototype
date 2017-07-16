@@ -5,8 +5,11 @@ using UnityEngine;
 public class SpawnController : MonoBehaviour, ISpawn {
 
     [Header("Time settings")]
+    [Range(0,25)]
     public float startTime;
+    [Range(0, 1f)]
     public float betweenSpawn;
+    [Range(0, 25)]
     public float betweenWaves;
 
     [Header("Wave structure settings")]
@@ -38,10 +41,10 @@ public class SpawnController : MonoBehaviour, ISpawn {
     IEnumerator SpawnWaves()
     {
         yield return new WaitForSeconds(startTime);
-        wavesRemain = waves.Length+1;
+        wavesRemain = waves.Length;
         for (int i = 0; i < waves.Length; i++)
         {
-            wavesRemain--;
+            
             monstersRemain = CalculateMonstersRemain(waves[i]);
             waveMonstersStartCount = (waveMonstersStartCount-waveGraveyard)+ monstersRemain;
             waveGraveyard = 0;
@@ -53,10 +56,11 @@ public class SpawnController : MonoBehaviour, ISpawn {
                 if (waves[i][j] != '-' && waves[i][j] != '0')
                     monstersRemain--;
             }
-            if (wavesRemain<0)
-                wavesEnded = true;
-            yield return new WaitForSeconds(betweenWaves);
             
+            yield return new WaitForSeconds(betweenWaves);
+            wavesRemain--;
+            if (wavesRemain < 0)
+                wavesEnded = true;
         }
         wavesEnded = true;
     }

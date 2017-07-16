@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour {
             Win();
     }
 
+    // Called by castle PlayerStats when HP<0
     void GameOver()
     {
         if (!workIsDone)
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    // Called by spawn when all waves ended and monsters died
     void Win()
     {
         if (!workIsDone)
