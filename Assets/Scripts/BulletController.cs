@@ -17,7 +17,7 @@ public class BulletController : MonoBehaviour, IAmmo {
     private Vector3 targetPlace;
 
     void Update()
-    {
+    { 
         if (!targetFloor)
             targetPlace = targetGO == null ? targetPlace : targetGO.position;
         Vector3 dir = targetPlace - transform.position;
@@ -31,7 +31,16 @@ public class BulletController : MonoBehaviour, IAmmo {
 
         transform.Translate(dir.normalized * distanceToGo, Space.World);
     }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRange);
+    }
 
+    public void SetRotation(float y)
+    {
+        transform.rotation = Quaternion.Euler(90, 90+y, 90);
+    }
 
     //
     // Seek target
@@ -76,8 +85,12 @@ public class BulletController : MonoBehaviour, IAmmo {
             mc.GetDamage(damage);
         }
 
-        GameObject ptl=Instantiate(particles, transform.position, transform.rotation);
-        Destroy(ptl, 1f);
+        if (particles!=null)
+        {
+            GameObject ptl = Instantiate(particles, transform.position, transform.rotation);
+            Destroy(ptl, 1f);
+        }
+        
 
         Destroy(gameObject);
     }
@@ -88,16 +101,14 @@ public class BulletController : MonoBehaviour, IAmmo {
         Collider[] monsters = Physics.OverlapSphere(transform.position, explosionRange);
         for (int i = 0; i < monsters.Length; i++)
         {
-            MonsterBehaviour mc = monsters[i].GetComponent<MonsterBehaviour>();
+            IMonster mc = monsters[i].GetComponent<IMonster>();
             if (mc != null)
             {
                 mc.GetDamage(damage);
-
-
-                GameObject ptl = Instantiate(particles, transform.position, transform.rotation);
-                Destroy(ptl, 2f);
             }
         }
+        GameObject ptl = Instantiate(particles, transform.position, transform.rotation);
+        Destroy(ptl, 2f);
         Destroy(gameObject);
     }
 

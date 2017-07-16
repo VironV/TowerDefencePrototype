@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IAmmo {
 
     void Seek(Transform go);
+
+    void SetRotation(float y);
 }

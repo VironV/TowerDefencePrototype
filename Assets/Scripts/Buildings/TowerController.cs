@@ -10,35 +10,50 @@ public class TowerController {
     public float rotationSpeed;
     public float fireRate = 2;
 
+    [Header("Technical]")]
+    public float threshold = 20f;
+
     private float fireCountdown = 0f;
+    private Transform target;
 
     private ITower tower;
 
     public void SetTowerController(ITower tower)
     {
         this.tower = tower;
+        target = null;
     }
 
-    public void Rotate(Vector3 target, Vector3 positionSelf, Quaternion rotationSelf)
+    private Quaternion FindDirection(Vector3 positionSelf)
     {
-        Vector3 dir = target - positionSelf;
-        Quaternion quatRotation = Quaternion.LookRotation(dir);
+        Vector3 dir = target.position - positionSelf;
+        return Quaternion.LookRotation(dir);
+    }
+
+    public void Rotate(Vector3 positionSelf, Quaternion rotationSelf)
+    {
+        Quaternion quatRotation= FindDirection(positionSelf);
         if (quatRotation!=rotationSelf)
         {
             tower.Rotate(quatRotation,rotationSpeed);
         }
     }
 
-    public bool isReadyToShoot()
+    public bool isTargetNull()
     {
-        return (fireCountdown <= 0);
+        return target == null;
     }
 
-    public void CheckToShoot()
+    public void CheckToShoot(Quaternion rotation,Vector3 positionSelf)
     {
-        if (isReadyToShoot())
+        Quaternion quatRotation = FindDirection(positionSelf);
+
+        if (Mathf.Abs(quatRotation.eulerAngles.y - rotation.eulerAngles.y) > threshold)
+            return;
+
+        if (fireCountdown <= 0)
         {
-            tower.Shoot();
+            tower.Shoot(target);
             ResetCountdown();
         }    
     }
@@ -71,11 +86,11 @@ public class TowerController {
 
         if (nearestTarget != null && shortestDistance <= range)
         {
-            tower.UpdateTarget(nearestTarget.transform);
+            target = nearestTarget.transform;
         }
         else
         {
-            tower.UpdateTarget(null);
+            target = null;
         }
 
         

@@ -38,21 +38,22 @@ public class SpawnController : MonoBehaviour, ISpawn {
     IEnumerator SpawnWaves()
     {
         yield return new WaitForSeconds(startTime);
-        wavesRemain = waves.Length;
+        wavesRemain = waves.Length+1;
         for (int i = 0; i < waves.Length; i++)
         {
+            wavesRemain--;
             monstersRemain = CalculateMonstersRemain(waves[i]);
             waveMonstersStartCount = (waveMonstersStartCount-waveGraveyard)+ monstersRemain;
             waveGraveyard = 0;
             for (int j = 0; j < waves[i].Length; j++)
             {
+                
                 spawnMonster(waves[i][j]);
                 yield return new WaitForSeconds(betweenSpawn);
                 if (waves[i][j] != '-' && waves[i][j] != '0')
                     monstersRemain--;
             }
-            wavesRemain--;
-            if (wavesRemain<=0)
+            if (wavesRemain<0)
                 wavesEnded = true;
             yield return new WaitForSeconds(betweenWaves);
             

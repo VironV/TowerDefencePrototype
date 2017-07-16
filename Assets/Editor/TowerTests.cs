@@ -7,6 +7,7 @@ using NSubstitute;
 
 public class TowerTests {
 
+    /*
     [Test]
     public void ItShoots()
     {
@@ -44,6 +45,7 @@ public class TowerTests {
         tower.ReceivedWithAnyArgs().Rotate(tempQ,1f);
     }
 
+    
     [Test]
     public void ItUpdatesTarget()
     {
@@ -78,6 +80,7 @@ public class TowerTests {
         controller.UpdateTarget(new GameObject[0], new Vector3());
         tower.Received().UpdateTarget(null);
     }
+    
 
     private TowerController GetControllerMock(ITower tower)
     {
@@ -91,4 +94,5 @@ public class TowerTests {
     {
         return Substitute.For<ITower>();
     }
+    */
 }

@@ -10,7 +10,6 @@ public class TowerBehaviour : MonoBehaviour, ITower {
     public GameObject bullet;
     public TowerController controller;
 
-    private Transform target;
     private string monsterTag = "Monster";
 
     void Start()
@@ -22,12 +21,13 @@ public class TowerBehaviour : MonoBehaviour, ITower {
 
     void Update()
     {
-        if (target == null)
+        controller.TicCountdown();
+
+        if (controller.isTargetNull())
             return;
 
-        controller.Rotate(target.position, transform.position, transform.rotation);
-        controller.TicCountdown();
-        controller.CheckToShoot();
+        controller.Rotate(transform.position, transform.rotation);
+        controller.CheckToShoot(rotator.rotation,transform.position);
     }
 
     void AskToFindTarget()
@@ -50,20 +50,15 @@ public class TowerBehaviour : MonoBehaviour, ITower {
         rotator.rotation = Quaternion.Euler(0f, rotation.y, 0f);
     }
 
-    public void Shoot()
+    public void Shoot(Transform target)
     {
-        GameObject bulletInstance = (GameObject)Instantiate(bullet, bulletSpawn.position, bulletSpawn.rotation);
+        GameObject bulletInstance = (GameObject)Instantiate(bullet, bulletSpawn.position, Quaternion.identity);
         if (bulletInstance!=null)
         {
             IAmmo bc = bulletInstance.GetComponent<IAmmo>();
-            if (bc!=null)
-                bc.Seek(target);
+            bc.SetRotation(rotator.rotation.eulerAngles.y);
+            bc.Seek(target);
         }
-    }
-
-    public void UpdateTarget(Transform target)
-    {
-        this.target = target;
     }
 
 #endregion

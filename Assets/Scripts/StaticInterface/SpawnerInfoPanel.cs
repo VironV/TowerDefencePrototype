@@ -28,6 +28,10 @@ public class SpawnerInfoPanel : MonoBehaviour {
             return;
         }
         monsterText.text = spawner.GetMonstersRemain.ToString();
-        waveText.text = spawner.GetWavesRemain.ToString();
+
+        int waves = spawner.GetWavesRemain;
+        if (waves < 0)
+            waves = 0;
+        waveText.text = waves.ToString();
     }
 }

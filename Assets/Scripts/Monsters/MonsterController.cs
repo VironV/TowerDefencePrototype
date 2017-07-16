@@ -68,7 +68,10 @@ public class MonsterController {
     public void ChangeColor(Color currentColor)
     { 
         if (currentColor == damagedColor)
+        {
             changingColor = false;
+        }
+            
         if (changingColor)
         {
             monsterController.ChangeColor(Color.Lerp(currentColor, damagedColor, Time.deltaTime * changindColorSpeed));
