@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Renderer))]
 public class MonsterBehaviour : MonoBehaviour, IMonster {
 
     public Image heathBar;
     public MonsterController controller;
 
-    private Renderer rend;
+    //private Renderer rend;
     private ISpawn spawner;
 
     private void Start()
     {
-        rend = GetComponent<Renderer>();
+        //rend = GetComponent<Renderer>();
+        Color changeThisVariableLater = Color.black;
 
-        controller.SetMonsterController(this,rend.material.color,WaypointsController.points);
+        controller.SetMonsterController(this,changeThisVariableLater,WaypointsController.points);
     }
 
     void Update() {
@@ -26,7 +26,7 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
             return;
         }
 
-        controller.ChangeColor(rend.material.color);
+        //controller.ChangeColor(rend.material.color);
         controller.Move(transform.position);
     }
 
@@ -48,7 +48,7 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
 
     public void ChangeColor(Color color)
     {
-        rend.material.color = color;
+        //rend.material.color = color;
     }
 
     public void DieAndTellToSpawn()
