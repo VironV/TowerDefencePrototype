@@ -30,12 +30,13 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
         controller.Move(transform.position);
     }
 
-    // Controller intercations
+    
     public void SetSpawner(ISpawn spawn)
     {
         spawner = spawn;
     }
 
+    // Controller intercations
     public void GetDamage(int inpDamage)
     {
         controller.GetDamage(inpDamage);
@@ -76,7 +77,9 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
     // Destroing and calling spawner to count death
     private void DestroySelf()
     {
+
         spawner.AddToGraveyard();
         Destroy(gameObject);
+
     }
 }
