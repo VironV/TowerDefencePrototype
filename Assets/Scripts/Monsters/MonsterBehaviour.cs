@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonsterBehaviour : MonoBehaviour, IMonster {
+public class MonsterBehaviour : MonoBehaviour, IMonster, IBurning {
 
     public Image heathBar;
     public MonsterController controller;
 
     //private Renderer rend;
     private ISpawn spawner;
+    private Coroutine burning;
 
     private void Start()
     {
@@ -81,5 +82,23 @@ public class MonsterBehaviour : MonoBehaviour, IMonster {
         spawner.AddToGraveyard();
         Destroy(gameObject);
 
+    }
+
+    public void startBurning(float howLong, float period, int damagePerTick)
+    {
+        if (burning != null)
+            StopCoroutine(burning);
+        burning = StartCoroutine(toBurn(howLong,period,damagePerTick));
+    }
+
+    IEnumerator toBurn(float howLong, float period, int damagePerTick)
+    {
+        float currentTime = 0f;
+        while (currentTime<howLong)
+        {
+            GetDamage(damagePerTick);
+            currentTime += period;
+            yield return period;
+        }
     }
 }

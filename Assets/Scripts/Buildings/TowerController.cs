@@ -69,6 +69,11 @@ public class TowerController {
 
     private void ResetCountdown()
     {
+        if (fireRate == 0)
+        { 
+            fireCountdown = 0;
+            return;
+        }
         fireCountdown = 1f / fireRate;
     }
 

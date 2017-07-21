@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IAmmo {
+public interface IAmmo: IRotatable {
+    void Fire(Transform go);
+}
 
-    void Seek(Transform go);
-
+public interface IRotatable
+{
     void SetRotation(float y);
 }

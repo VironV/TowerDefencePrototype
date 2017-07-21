@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IMonster
+public interface IMonster 
 {
     void Move(Vector3 toMove);
 

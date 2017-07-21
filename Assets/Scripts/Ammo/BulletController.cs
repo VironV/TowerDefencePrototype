@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour, IAmmo {
+public class BulletController : MonoBehaviour, IAmmo{
 
     [Header("Settings")]
     public float speed=70f;
@@ -35,7 +35,7 @@ public class BulletController : MonoBehaviour, IAmmo {
     //
     // Seek target
     //
-    public void Seek(Transform go)
+    public void Fire(Transform go)
     {
         if (targetFloor)
             SeekPlace(go.position);

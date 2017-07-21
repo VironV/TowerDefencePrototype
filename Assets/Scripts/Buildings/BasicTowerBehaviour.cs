@@ -2,16 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerBehaviour : MonoBehaviour, ITower {
+public class BasicTowerBehaviour : MonoBehaviour, ITower {
 
     [Header("Techical")]
     public Transform rotator;
     public Transform bulletSpawn;
-    public GameObject bullet;
     public TowerController controller;
+
+    public GameObject bullet;
+
+    public bool fireThrower = false;
+    public GameObject fire;
+    public Vector3 offset;
 
     private string monsterTag = "Monster";
     private Transform target;
+
+    private GameObject currentFire;
+    private bool throwingFire;
+        
+    public Transform Target { get { return target; } }
 
     void Start()
     {
@@ -26,7 +36,12 @@ public class TowerBehaviour : MonoBehaviour, ITower {
         controller.TicCountdown();
 
         if (target==null)
+        {
+            if (fireThrower && throwingFire)
+                StopThrowFire();
             return;
+        }
+            
 
         controller.Rotate(transform.position,rotator.rotation,target.position);
         controller.CheckToShoot(transform.position,rotator.rotation,target.position);
@@ -35,7 +50,7 @@ public class TowerBehaviour : MonoBehaviour, ITower {
     // Controller interactions
     void AskToFindTarget()
     {
-        GameObject[] monsters = GameObject.FindGameObjectsWithTag(monsterTag);
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
         controller.UpdateTarget(monsters,transform.position);
     }
 
@@ -53,12 +68,36 @@ public class TowerBehaviour : MonoBehaviour, ITower {
 
     public void Shoot()
     {
+        if (!fireThrower)
+            ShootBullet();
+        else
+            ThrowFire();
+    }
+
+    void ThrowFire()
+    {
+        if (!throwingFire)
+        {
+
+            GameObject bulletInstance = (GameObject)Instantiate(fire, transform.position + offset, Quaternion.identity);
+            bulletInstance.transform.parent = rotator;
+            if (bulletInstance != null)
+            {
+                IRotatable bc = bulletInstance.GetComponent<IRotatable>();
+                bc.SetRotation(rotator.rotation.eulerAngles.y);
+            }
+        }
+        throwingFire = true;
+    }
+
+    void ShootBullet()
+    {
         GameObject bulletInstance = (GameObject)Instantiate(bullet, bulletSpawn.position, Quaternion.identity);
         if (bulletInstance!=null)
         {
             IAmmo bc = bulletInstance.GetComponent<IAmmo>();
             bc.SetRotation(rotator.rotation.eulerAngles.y);
-            bc.Seek(target);
+            bc.Fire(target);
         }
     }
 
@@ -69,4 +108,9 @@ public class TowerBehaviour : MonoBehaviour, ITower {
         Gizmos.DrawWireSphere(transform.position, controller.range);
     }
 
+    void StopThrowFire()
+    {
+        throwingFire = false;
+        Destroy(currentFire);
+    }
 }
