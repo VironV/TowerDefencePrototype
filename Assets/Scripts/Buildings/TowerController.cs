@@ -10,7 +10,7 @@ public class TowerController {
     public float range;
     [Range(5,50)]
     public float rotationSpeed;
-    [Range(0.01f, 25)]
+    [Range(0, 25)]
     public float fireRate = 2;
 
     [Header("Technical]")]

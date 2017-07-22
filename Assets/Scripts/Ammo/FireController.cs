@@ -5,35 +5,53 @@ using UnityEngine;
 public class FireController : MonoBehaviour, IRotatable {
 
     [Header("Settings")]
-    public int damage = 10;
+    public int damage = 1;
     public float howLong = 5;
-    public float period = 0.5f;
+    public float tickPeriod = 0.5f;
+    public float damagePeriod = 0.5f;
     public int tickDamage = 10;
 
     [Header("Techical")]
     public GameObject particles;
-    public Vector3 positionOffset;
+    public float positionOffset;
     public Vector3 rotationOffest;
+
+    private float damageCountdown;
 
     private void Start()
     {
+        damageCountdown = 0;
+
+
         Quaternion rotation = Quaternion.Euler(transform.rotation.eulerAngles.x + rotationOffest.x,
                                             transform.rotation.eulerAngles.y + rotationOffest.y,
                                             transform.rotation.eulerAngles.z + rotationOffest.z);
-        GameObject fire = Instantiate(particles, transform.position + positionOffset, rotation);
+        GameObject fire = Instantiate(particles, transform.position, rotation);
+        fire.transform.Translate(new Vector3(0,0,positionOffset), Space.Self);
         fire.transform.parent = transform;
     }
 
+
     private void OnTriggerStay(Collider other)
-    {
-        other.GetComponent<IMonster>().GetDamage(damage);
-        other.GetComponent<IBurning>().startBurning(howLong, period, tickDamage);
+    {    
+        if (other.tag==Bestiary.GetMonsterTag )
+        {
+            damageCountdown += Time.deltaTime;
+            if (damageCountdown>=damagePeriod)
+            {
+                damageCountdown = 0;
+                other.GetComponent<IMonster>().GetDamage(damage);
+            }
+        }  
     }
 
     private void OnTriggerExit(Collider other)
     {
-        other.GetComponent<IMonster>().GetDamage(damage);
-        other.GetComponent<IBurning>().startBurning(howLong, period, tickDamage);
+        if (other.tag == Bestiary.GetMonsterTag)
+        {
+            damageCountdown = 0;
+            other.GetComponent<IBurning>().startBurning(howLong, tickPeriod, tickDamage);
+        }
     }
 
     public void SetRotation(float y)

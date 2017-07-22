@@ -98,7 +98,7 @@ public class MonsterBehaviour : MonoBehaviour, IMonster, IBurning {
         {
             GetDamage(damagePerTick);
             currentTime += period;
-            yield return period;
+            yield return new WaitForSeconds(period);
         }
     }
 }

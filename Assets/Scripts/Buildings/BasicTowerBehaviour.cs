@@ -13,7 +13,8 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
 
     public bool fireThrower = false;
     public GameObject fire;
-    public Vector3 offset;
+    public float posMultiplier;
+    public float posUpper;
 
     private string monsterTag = "Monster";
     private Transform target;
@@ -25,6 +26,7 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
 
     void Start()
     {
+        throwingFire = false;
         target = null;
         controller.SetTowerController(this);
         monsterTag = Bestiary.GetMonsterTag;
@@ -76,14 +78,19 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
 
     void ThrowFire()
     {
+        Debug.Log("Can i fire?");
         if (!throwingFire)
         {
+            Debug.Log("Yes I can");
+            Vector3 offset = target.transform.position - rotator.transform.position;
+            offset.Normalize();
+            offset = new Vector3(offset.x * posMultiplier, offset.y + posUpper, offset.z * posMultiplier);
 
-            GameObject bulletInstance = (GameObject)Instantiate(fire, transform.position + offset, Quaternion.identity);
-            bulletInstance.transform.parent = rotator;
-            if (bulletInstance != null)
+            currentFire = (GameObject)Instantiate(fire, rotator.position + offset, Quaternion.identity);
+            currentFire.transform.parent = rotator;
+            if (currentFire != null)
             {
-                IRotatable bc = bulletInstance.GetComponent<IRotatable>();
+                IRotatable bc = currentFire.GetComponent<IRotatable>();
                 bc.SetRotation(rotator.rotation.eulerAngles.y);
             }
         }

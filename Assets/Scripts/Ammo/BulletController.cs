@@ -87,7 +87,6 @@ public class BulletController : MonoBehaviour, IAmmo{
     }
 
     // Finding exploding targets with colliders
-    // Also if monster have more than one collider - he takes more damage. That's intentional (now)
     void Explode()
     {
         Collider[] monsters = Physics.OverlapSphere(transform.position, explosionRange);
