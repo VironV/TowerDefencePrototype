@@ -49,6 +49,7 @@ public class NodeController : MonoBehaviour {
         buildManager.SelectNode(this);
         if (tower != null)
             nodeUI.ShowSellUI(this);
+            
         else
             nodeUI.ShowBuildUI(this);  
     }

@@ -16,7 +16,8 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
     public float posMultiplier;
     public float posUpper;
 
-    private string monsterTag = "Monster";
+    public GameObject gizmo;
+
     private Transform target;
 
     private GameObject currentFire;
@@ -29,7 +30,6 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
         throwingFire = false;
         target = null;
         controller.SetTowerController(this);
-        monsterTag = Bestiary.GetMonsterTag;
         InvokeRepeating("AskToFindTarget", 0f, 0.5f);
     }
 
@@ -52,7 +52,7 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
     // Controller interactions
     void AskToFindTarget()
     {
-        GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
+        GameObject[] monsters = GameObject.FindGameObjectsWithTag(Bestiary.GetMonsterTag);
         controller.UpdateTarget(monsters,transform.position);
     }
 
@@ -78,10 +78,8 @@ public class BasicTowerBehaviour : MonoBehaviour, ITower {
 
     void ThrowFire()
     {
-        Debug.Log("Can i fire?");
         if (!throwingFire)
         {
-            Debug.Log("Yes I can");
             Vector3 offset = target.transform.position - rotator.transform.position;
             offset.Normalize();
             offset = new Vector3(offset.x * posMultiplier, offset.y + posUpper, offset.z * posMultiplier);

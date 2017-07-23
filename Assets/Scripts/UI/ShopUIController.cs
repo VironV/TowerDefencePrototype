@@ -9,6 +9,7 @@ public class ShopUIController : MonoBehaviour {
 
     private TowerBlueprint standartTower;
     private TowerBlueprint missleTower;
+    private TowerBlueprint fireTower;
 
     void Start()
     {
@@ -16,6 +17,7 @@ public class ShopUIController : MonoBehaviour {
         nodeUI = buildmanager.nodeUISetter;
         standartTower = TowersShop.GetTower("Standart");
         missleTower = TowersShop.GetTower("Missle");
+        fireTower = TowersShop.GetTower("Fire");
     }
 
     //
@@ -30,6 +32,12 @@ public class ShopUIController : MonoBehaviour {
     public void BuildMissleTower()
     {
         buildmanager.BuildTower(missleTower);
+        nodeUI.Hide();
+    }
+
+    public void BuildFireTower()
+    {
+        buildmanager.BuildTower(fireTower);
         nodeUI.Hide();
     }
 }
